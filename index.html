@@ -1,76 +1,483 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ADBOSS - Your AI Assistant</title>
-  <style>
-    /* Reset & Base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADBOSS ADVANCEX - Future Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow-y: auto;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a0033, #000000);
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: linear-gradient(to right, #141e30, #243b55);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      text-align: center;
-    }
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000, #330066);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+            z-index: 1000;
+        }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
+        #intro-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      color: #ddd;
-    }
+        .intro-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            color: #00ffcc;
+            text-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc;
+            animation: pulse 1.5s infinite alternate;
+        }
 
-    .btn {
-      background-color: #00c9a7;
-      color: white;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      text-decoration: none;
-    }
+        .made-by {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
 
-    .btn:hover {
-      background-color: #00b08b;
-    }
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
 
-    footer {
-      margin-top: 50px;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-  </style>
+        #app-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
+            border: 1px solid rgba(0, 255, 204, 0.5);
+            animation: fadeIn 1s forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffcc;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #00ffcc;
+            text-align: center;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .option-button {
+            background: rgba(0, 255, 204, 0.1);
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .option-button:hover {
+            background: #00ffcc;
+            color: #1a0033;
+            box-shadow: 0 0 20px #00ffcc;
+            transform: translateY(-5px);
+        }
+
+        .option-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        #prediction-result {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 1.3em;
+            color: #e0e0e0;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #prediction-result img {
+            margin-top: 15px;
+            width: 60px;
+            height: 60px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-group label {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #00ffcc;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #00ffcc;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #e0e0e0;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .input-group input[type="text"]::placeholder,
+        .input-group input[type="number"]::placeholder {
+            color: #aaa;
+        }
+
+        .input-group input[type="text"]:focus,
+        .input-group input[type="number"]:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+        }
+
+        /* Particle effect styles */
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: #00ffcc;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleAnimation 1s forwards;
+        }
+
+        @keyframes particleAnimation {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 0.8;
+                top: var(--y);
+                left: var(--x);
+            }
+        }
+
+        /* Ad display message */
+        #ad-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ffcc;
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-size: 1.8em;
+            text-align: center;
+            z-index: 1001;
+            display: none; /* Hidden by default */
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.7);
+        }
+    </style>
 </head>
 <body>
 
-  <h1>🤖 Welcome to ADBOSS</h1>
-  <p>Your Smart AI Assistant for Ads, Business & Support</p>
-  <a class="btn" href="#">Start Exploring</a>
+    <div id="intro-screen">
+        <div class="intro-text">WELCOME TO ADBOSS ADVANCEX</div>
+        <div class="made-by">MADE BY ARVIND DARA</div>
+    </div>
 
-  <footer>
-    &copy; 2025 ADBOSS | Powered by Tidio
-  </footer>
+    <div id="app-container">
+        <h1>ADBOSS ADVANCEX</h1>
 
-  <!-- ✅ Tidio Chatbot Script (Paste Here) -->
-  <script src="//code.tidio.co/hraocft325vcbswgy5rpwhgju5jbvtmf.js" async></script>
+        <div class="input-group" id="user-info-input" style="display: none;">
+            <label for="userName">आपका नाम:</label>
+            <input type="text" id="userName" placeholder="अपना नाम यहाँ दर्ज करें">
+            <label for="userDOB">जन्म का वर्ष (उदा: 1990):</label>
+            <input type="number" id="userDOB" placeholder="YYYY">
+        </div>
 
+        <div class="option-grid">
+            <div class="option-button" data-option="support" style="order: -1;">Support Us</div>
+            <div class="option-button" data-option="emoji">आप पर फिट इमोजी</div>
+            <div class="option-button" data-option="day">आज का दिन कैसा जाएगा?</div>
+            <div class="option-button" data-option="age">कितनी उम्र होगी?</div>
+            <div class="option-button" data-option="salary">सैलरी कितनी होगी?</div>
+            <div class="option-button" data-option="marriage">शादी कब होगी?</div>
+            <a href="https://arvinddara.github.io/ADBOSSADVANCE/" target="_blank" class="option-button" style="background: #ff6600; border-color: #ff6600; color: #fff;">FLY AVIATOR</a>
+        </div>
+
+        <div id="prediction-result">
+            नतीजा यहाँ दिखेगा...
+        </div>
+    </div>
+
+    <div id="ad-message">
+        कृपया यह विज्ञापन 10 बार देखें!
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const introScreen = document.getElementById('intro-screen');
+            const appContainer = document.getElementById('app-container');
+            const optionButtons = document.querySelectorAll('.option-button');
+            const predictionResult = document.getElementById('prediction-result');
+            const userInfoInput = document.getElementById('user-info-input');
+            const userNameInput = document.getElementById('userName');
+            const userDOBInput = document.getElementById('userDOB');
+            const adMessage = document.getElementById('ad-message');
+
+            // Intro screen animation
+            setTimeout(() => {
+                introScreen.classList.add('fade-out');
+                introScreen.addEventListener('transitionend', () => {
+                    introScreen.style.display = 'none';
+                    appContainer.style.display = 'flex';
+                }, { once: true });
+            }, 2000); // Intro screen will stay for 2 seconds
+
+            const createParticleEffect = (element) => {
+                const particleContainer = document.createElement('div');
+                particleContainer.classList.add('particle-container');
+                element.appendChild(particleContainer);
+
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    const size = Math.random() * 5 + 3; // 3 to 8px
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    const startX = Math.random() * 100 + '%';
+                    const startY = Math.random() * 100 + '%';
+                    particle.style.left = startX;
+                    particle.style.top = startY;
+                    particle.style.setProperty('--x', `${Math.random() * 100}%`);
+                    particle.style.setProperty('--y', `${Math.random() * 100}%`);
+                    particle.style.animationDelay = `${Math.random() * 0.5}s`;
+                    particleContainer.appendChild(particle);
+                }
+
+                setTimeout(() => {
+                    particleContainer.remove();
+                }, 1000); // Remove particles after animation
+            };
+
+            const resetOptionButtonHandlers = () => {
+                optionButtons.forEach(button => {
+                    const oldButton = button;
+                    const newButton = oldButton.cloneNode(true);
+                    oldButton.parentNode.replaceChild(newButton, oldButton);
+                });
+                const updatedOptionButtons = document.querySelectorAll('.option-button');
+                attachOptionButtonListeners(updatedOptionButtons);
+            };
+
+            const attachOptionButtonListeners = (buttons) => {
+                buttons.forEach(button => {
+                    if (button.dataset.option !== undefined) {
+                        button.addEventListener('click', () => {
+                            const option = button.dataset.option;
+                            predictionResult.innerHTML = 'सोच रहा हूँ...';
+                            userInfoInput.style.display = 'none';
+
+                            if (option === 'emoji') {
+                                userInfoInput.style.display = 'flex';
+                                predictionResult.innerHTML = 'अपना नाम और जन्म का वर्ष दर्ज करें और फिर से "आप पर फिट इमोजी" पर क्लिक करें।';
+                                const emojiButton = document.querySelector('.option-button[data-option="emoji"]');
+                                if (emojiButton) {
+                                    emojiButton.onclick = () => predictEmoji();
+                                }
+                            } else if (option === 'day') {
+                                predictDay();
+                            } else if (option === 'age') {
+                                userInfoInput.style.display = 'flex';
+                                predictionResult.innerHTML = 'अपना जन्म का वर्ष दर्ज करें और फिर से "कितनी उम्र होगी?" पर क्लिक करें।';
+                                const ageButton = document.querySelector('.option-button[data-option="age"]');
+                                if (ageButton) {
+                                    ageButton.onclick = () => predictAge();
+                                }
+                            } else if (option === 'salary') {
+                                predictSalary();
+                            } else if (option === 'marriage') {
+                                predictMarriage();
+                            } else if (option === 'support') {
+                                adMessage.style.display = 'block';
+                                setTimeout(() => {
+                                    adMessage.style.display = 'none';
+                                    predictionResult.innerHTML = 'आपके समर्थन के लिए धन्यवाद! हम आपके लिए और भी बेहतर सुविधाएँ लाने का प्रयास करते रहेंगे।';
+                                    createParticleEffect(predictionResult);
+                                }, 5000); // Show for 5 seconds
+                            }
+                        });
+                    }
+                });
+            };
+
+            attachOptionButtonListeners(optionButtons);
+
+            function predictEmoji() {
+                const name = userNameInput.value.trim().toLowerCase();
+                const dob = parseInt(userDOBInput.value);
+
+                if (!name || isNaN(dob)) {
+                    predictionResult.innerHTML = 'कृपया अपना नाम और जन्म का वर्ष दर्ज करें।';
+                    return;
+                }
+
+                let predictionText = '';
+
+                if (name.includes('happy') || name.includes('खुश') || (dob % 3 === 0)) {
+                    predictionText = 'आप एक बहुत ही खुशमिजाज व्यक्ति हैं!';
+                } else if (dob % 2 === 0) {
+                    predictionText = 'आपका व्यक्तित्व बहुत चमकदार और आकर्षक है!';
+                } else {
+                    predictionText = 'आप हमेशा आगे बढ़ने वाले और महत्वाकांक्षी हैं!';
+                }
+
+                const emojiList = ['😄', '😂', '😎', '😇', '🤔', '🥳', '🚀', '🌟', '💖', '💡', '🏆', '🌈', '🤩', '✨', '🔥', '💪', '💯'];
+                const randomIndex = Math.floor(Math.random() * emojiList.length);
+                const randomEmoji = emojiList[randomIndex];
+
+                predictionResult.innerHTML = `आप पर फिट इमोजी: ${randomEmoji} <br>${predictionText}`;
+                userInfoInput.style.display = 'none';
+                createParticleEffect(predictionResult);
+                resetOptionButtonHandlers();
+            }
+
+            function predictDay() {
+                const days = [
+                    'आज का दिन शानदार रहेगा! आप ऊर्जा से भरपूर महसूस करेंगे।',
+                    'आज आपको कुछ चुनौतियाँ मिल सकती हैं, लेकिन आप उन्हें आसानी से पार कर लेंगे।',
+                    'आज का दिन सामान्य रहेगा, कुछ नया सीखने को मिल सकता है।',
+                    'आज आपको कोई अच्छी खबर मिल सकती है, अपने कान खुले रखें!',
+                    'आज आपको आराम करने और रीचार्ज करने की आवश्यकता हो सकती है।',
+                    'आज आप रचनात्मक महसूस करेंगे, अपनी कल्पना को उड़ान दें!',
+                    'आज आप सामाजिक गतिविधियों में व्यस्त रहेंगे, नए लोगों से मिल सकते हैं।',
+                    'आज आप भाग्यशाली महसूस करेंगे, छोटे-मोटे जोखिम ले सकते हैं!',
+                    'आज का दिन आत्म-चिंतन और शांति के लिए अच्छा है।',
+                    'आज आप अपने लक्ष्यों की ओर एक महत्वपूर्ण कदम बढ़ा सकते हैं।'
+                ];
+                const randomIndex = Math.floor(Math.random() * days.length);
+                predictionResult.innerHTML = days[randomIndex];
+                createParticleEffect(predictionResult);
+                resetOptionButtonHandlers();
+            }
+
+            function predictAge() {
+                const dob = parseInt(userDOBInput.value);
+                if (isNaN(dob) || dob < 1900 || dob > new Date().getFullYear()) {
+                    predictionResult.innerHTML = 'कृपया जन्म का सही वर्ष दर्ज करें।';
+                    return;
+                }
+                const currentYear = new Date().getFullYear();
+                const currentAge = currentYear - dob;
+                const predictedAgeOffset = Math.floor(Math.random() * 35) + 10;
+                const predictedAge = currentAge + predictedAgeOffset;
+
+                predictionResult.innerHTML = `आपकी उम्र लगभग ${predictedAge} साल होगी।`;
+                userInfoInput.style.display = 'none';
+                createParticleEffect(predictionResult);
+                resetOptionButtonHandlers();
+            }
+
+            function predictSalary() {
+                const baseSalary = Math.floor(Math.random() * 50000) + 20000;
+                const multiplier = Math.random() * 5 + 1;
+                const predictedSalary = Math.floor(baseSalary * multiplier * 10);
+                predictionResult.innerHTML = `आपकी सैलरी लगभग ₹${predictedSalary.toLocaleString('en-IN')} प्रति माह होगी!`;
+                createParticleEffect(predictionResult);
+                resetOptionButtonHandlers();
+            }
+
+            function predictMarriage() {
+                const marriagePredictions = [
+                    'आपकी शादी जल्द ही एक प्रेमपूर्ण और समझदार व्यक्ति से होगी।',
+                    'आपकी शादी थोड़ी देर से हो सकती है, लेकिन एक अद्भुत साथी के साथ।',
+                    'आपकी शादी एक खुशहाल और सफल रिश्ते में बदलेगी।',
+                    'आपको अपने जीवन साथी को खोजने के लिए थोड़ा और इंतजार करना पड़ सकता है।',
+                    'आपकी शादी एक ऐसे व्यक्ति से होगी जो आपके सपनों को समझेगा और उनका सम्मान करेगा।',
+                    'आपकी शादी एक रोमांचक और अनपेक्षित तरीके से हो सकती है।',
+                    'आप एक ऐसे व्यक्ति से शादी करेंगे जो आपके जीवन में स्थिरता और खुशी लाएगा।'
+                ];
+                const randomIndex = Math.floor(Math.random() * marriagePredictions.length);
+                predictionResult.innerHTML = marriagePredictions[randomIndex];
+                createParticleEffect(predictionResult);
+                resetOptionButtonHandlers();
+            }
+        });
+    </script>
 </body>
 </html>
