@@ -47,6 +47,8 @@
             color: #00ffcc;
             text-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc;
             animation: pulse 1.5s infinite alternate;
+            text-align: center; /* Added for horizontal centering */
+            margin: auto; /* Added for vertical centering */
         }
 
         .made-by {
@@ -54,6 +56,7 @@
             color: #999;
             margin-top: 20px;
             letter-spacing: 2px;
+            text-align: center; /* Added for horizontal centering */
         }
 
         @keyframes pulse {
@@ -271,7 +274,6 @@
         </div>
 
         <div class="option-grid">
-            <div class="option-button" data-option="support" style="order: -1;">Support Us</div>
             <div class="option-button" data-option="emoji">आप पर फिट इमोजी</div>
             <div class="option-button" data-option="day">आज का दिन कैसा जाएगा?</div>
             <div class="option-button" data-option="age">कितनी उम्र होगी?</div>
@@ -373,14 +375,8 @@
                                 predictSalary();
                             } else if (option === 'marriage') {
                                 predictMarriage();
-                            } else if (option === 'support') {
-                                adMessage.style.display = 'block';
-                                setTimeout(() => {
-                                    adMessage.style.display = 'none';
-                                    predictionResult.innerHTML = 'आपके समर्थन के लिए धन्यवाद! हम आपके लिए और भी बेहतर सुविधाएँ लाने का प्रयास करते रहेंगे।';
-                                    createParticleEffect(predictionResult);
-                                }, 5000); // Show for 5 seconds
                             }
+                            // Removed the 'support' option logic
                         });
                     }
                 });
@@ -428,7 +424,7 @@
                     'आज आप सामाजिक गतिविधियों में व्यस्त रहेंगे, नए लोगों से मिल सकते हैं।',
                     'आज आप भाग्यशाली महसूस करेंगे, छोटे-मोटे जोखिम ले सकते हैं!',
                     'आज का दिन आत्म-चिंतन और शांति के लिए अच्छा है।',
-                    'आज आप अपने लक्ष्यों की ओर एक महत्वपूर्ण कदम बढ़ा सकते हैं।'
+                    'आज आप अपने लक्ष्यों की ओर एक महत्वपूर्ण कदम बढ़ा सकते हैं.'
                 ];
                 const randomIndex = Math.floor(Math.random() * days.length);
                 predictionResult.innerHTML = days[randomIndex];
